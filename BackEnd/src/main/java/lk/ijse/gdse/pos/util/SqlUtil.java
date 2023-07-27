@@ -7,7 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-/*public class SqlUtil {
+public class SqlUtil {
     private static PreparedStatement execute(String sql, Object... params) throws SQLException, ClassNotFoundException {
         Connection connection = DBConnection.getInstance().getConnection();
         PreparedStatement stm = connection.prepareStatement(sql);
@@ -26,4 +26,4 @@ import java.sql.SQLException;
         return execute(sql, params).executeUpdate() > 0;
     }
 
-}*/
+}
