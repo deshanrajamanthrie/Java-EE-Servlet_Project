@@ -25,7 +25,7 @@ import java.sql.*;
 @WebServlet(urlPatterns = "/customer")
 public class CustomerController extends HttpServlet {
 
-    CustomerBoImpl customerBo = new CustomerBoImpl();
+    CustomerBoImpl customerBo = new CustomerBoImpl();// git
     String message = "";
 
     @Override
