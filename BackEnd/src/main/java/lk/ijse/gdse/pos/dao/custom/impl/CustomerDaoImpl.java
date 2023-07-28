@@ -33,7 +33,7 @@ public class CustomerDaoImpl implements CustomerDao {
         ArrayList<Customer> allCustomers = new ArrayList<>();
         while (resultSet.next()) {
             allCustomers.add(new Customer(resultSet.getString(1), resultSet.getString(2), resultSet.getString(3),
-                    resultSet.getInt(4)));
+                    resultSet.getString(4)));
         }
         return allCustomers;
     }
