@@ -4,16 +4,17 @@ import lk.ijse.gdse.pos.entity.Customer;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
-public interface CrudDao extends SuperDao {
-    public boolean save(Customer entity) throws SQLException, ClassNotFoundException;
+public interface CrudDao<T, ID> extends SuperDao {
+    boolean save(T entity) throws SQLException, ClassNotFoundException;
 
+    boolean delete(ID id) throws SQLException, ClassNotFoundException;
 
-    public boolean delete(String id) throws SQLException, ClassNotFoundException;
+    boolean update(T entity) throws SQLException, ClassNotFoundException;
 
-    public boolean update(Customer entity) throws SQLException, ClassNotFoundException;
+    ResultSet search(ID id) throws SQLException, ClassNotFoundException;
 
-    public ResultSet search(String id) throws SQLException, ClassNotFoundException;
-
-    public ResultSet getAll() throws SQLException, ClassNotFoundException;
+    List<T> getAll() throws SQLException, ClassNotFoundException;
 }

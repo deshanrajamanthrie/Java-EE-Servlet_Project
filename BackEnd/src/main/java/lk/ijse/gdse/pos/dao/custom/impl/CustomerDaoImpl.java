@@ -1,12 +1,15 @@
 package lk.ijse.gdse.pos.dao.custom.impl;
 
+import lk.ijse.gdse.pos.dao.custom.CustomerDao;
 import lk.ijse.gdse.pos.entity.Customer;
 import lk.ijse.gdse.pos.util.SqlUtil;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
-public class CustomerDaoImpl {
+public class CustomerDaoImpl implements CustomerDao {
     public boolean save(Customer entity) throws SQLException, ClassNotFoundException {
         return SqlUtil.executeUpdate("INSERT INTO Customer VALUES(?,?,?,?)",
                 entity.getId(), entity.getName(), entity.getAddress(), entity.getContact());
@@ -25,8 +28,14 @@ public class CustomerDaoImpl {
         return SqlUtil.executeQuery("SELECT * FROM Customer WHERE CustID=?", id);
     }
 
-    public ResultSet getAll() throws SQLException, ClassNotFoundException {
-        return SqlUtil.executeQuery("SELECT * FROM Customer");
+    public List<Customer> getAll() throws SQLException, ClassNotFoundException {
+        ResultSet resultSet = SqlUtil.executeQuery("SELECT * FROM Customer");
+        ArrayList<Customer> allCustomers = new ArrayList<>();
+        while (resultSet.next()) {
+            allCustomers.add(new Customer(resultSet.getString(1), resultSet.getString(2), resultSet.getString(3),
+                    resultSet.getInt(4)));
+        }
+        return allCustomers;
     }
 
 
