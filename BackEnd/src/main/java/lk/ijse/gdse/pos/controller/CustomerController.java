@@ -3,6 +3,7 @@ package lk.ijse.gdse.pos.controller;
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
 import lk.ijse.gdse.pos.db.DBConnection;
+import lk.ijse.gdse.pos.dto.CustomerDTO;
 import lk.ijse.gdse.pos.entity.Customer;
 
 import lombok.SneakyThrows;
@@ -25,10 +26,11 @@ public class CustomerController extends HttpServlet {
             resp.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
         }
         Jsonb jsonb = JsonbBuilder.create();
-        Customer customer = jsonb.fromJson(req.getReader(), Customer.class);
+        CustomerDTO customerDTO = jsonb.fromJson(req.getReader(), CustomerDTO.class);
 
 
-        try {
+
+       /* try {
             String sql = "INSERT INTO Customer VALUES(?,?,?,?)";
             PreparedStatement pstm = DBConnection.getInstance().getConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             pstm.setObject(1, customer.getId());
@@ -39,6 +41,7 @@ public class CustomerController extends HttpServlet {
                 System.out.println("Saved Succesed!");
 
             }
+
             ResultSet rst = pstm.getGeneratedKeys();
             rst.next();
             resp.setStatus(HttpServletResponse.SC_CREATED);
@@ -48,7 +51,7 @@ public class CustomerController extends HttpServlet {
         } catch (SQLException | ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
-
+*/
 
 
     }
