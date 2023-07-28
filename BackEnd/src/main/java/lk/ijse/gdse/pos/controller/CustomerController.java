@@ -26,7 +26,7 @@ import java.sql.*;
 public class CustomerController extends HttpServlet {
 
     CustomerBoImpl customerBo = new CustomerBoImpl();// git
-    String message = "";
+    String message = ":";
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -48,7 +48,7 @@ public class CustomerController extends HttpServlet {
     }
 
     private void saveAndUpdateCustomer(HttpServletRequest req, HttpServletResponse resp, Status status) throws IOException {
-        JsonObjectBuilder objectBuilder = Json.createObjectBuilder(); //use for ==>we can use create object
+        JsonObjectBuilder objectBuilder = Json.createObjectBuilder(); //use for ==>we can use create object Manually
         try {
             resp.setContentType("application/json");  //check that resp type Json type or not
             JsonReader reader = Json.createReader(req.getReader());  // read the request
@@ -67,8 +67,8 @@ public class CustomerController extends HttpServlet {
             }
             if (customerDTO != null) {
                 objectBuilder.add("status", true);
-                objectBuilder.add(message, "Success");
-               // resp.setStatus(HttpServletResponse.SC_OK);
+                objectBuilder.add(message, "Successed!");
+                resp.setStatus(HttpServletResponse.SC_OK);
             } else {
                 objectBuilder.add(message, "Invalid Input");
                 throw new RuntimeException("Invalid Input....");
