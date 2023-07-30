@@ -25,8 +25,9 @@ import java.sql.*;
 @WebServlet(urlPatterns = "/customer")
 public class CustomerController extends HttpServlet {
 
-    CustomerBoImpl customerBo = new CustomerBoImpl();// git
-    String message = ":";
+    CustomerBoImpl customerBo = new CustomerBoImpl();
+    String message = "";
+
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -57,7 +58,7 @@ public class CustomerController extends HttpServlet {
                     jsonObject.getString("id"),
                     jsonObject.getString("name"),
                     jsonObject.getString("address"),
-                   jsonObject.getString("contact")
+                    jsonObject.getString("contact")
             );
             switch (status) {
                 case SAVE:
@@ -79,9 +80,38 @@ public class CustomerController extends HttpServlet {
             objectBuilder.add(message, e.toString());
             e.printStackTrace();
         } finally {
-            resp.getWriter().println(objectBuilder.build()); //parse the object (mannually create)for that use getWritter
+            resp.getWriter().println(objectBuilder.build()); //=====parse the object (mannually create)for that use getWritter
         }
     }
 
+    @Override
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
+        try {
+            String id = req.getParameter("id");
+            System.out.println("CustId:" + id);
+            if (customerBo.deleteCustomer(id)) {
+                objectBuilder.add("status", true);
+                objectBuilder.add("", "success");
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            resp.setStatus(HttpServletResponse.SC_BAD_GATEWAY);
+            objectBuilder.add("status", "false");
+            objectBuilder.add(message, e.getMessage());
+            e.printStackTrace();
+        } finally {    // all ready calls
+            resp.getWriter().println(objectBuilder.build());
+        }
+    }
 
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String status = req.getParameter("status");
+        if (status.equals("GET") || status.equals("SEARCH")) {
+            switch (status){
+                case "GET":
+                    CUS
+            }
+        }
+    }
 }
