@@ -4,15 +4,11 @@ import lk.ijse.gdse.pos.dao.custom.CustomerDao;
 import lk.ijse.gdse.pos.dao.custom.impl.CustomerDaoImpl;
 import lk.ijse.gdse.pos.dto.CustomerDTO;
 import lk.ijse.gdse.pos.entity.Customer;
-import lk.ijse.gdse.pos.mapper.ObjectMapper;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.TypeToken;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class CustomerBoImpl {
     CustomerDao customerDao = new CustomerDaoImpl();
@@ -33,10 +29,11 @@ public class CustomerBoImpl {
 
     }
 
-     public List<CustomerDTO> getAllCustomer() throws SQLException, ClassNotFoundException {
-     /// return   customerDao.getAll();
-
+    public List<CustomerDTO> getAllCustomer() throws SQLException, ClassNotFoundException {
+        /// return   customerDao.getAll();
+        return null;
     }
+
     public ResultSet searchCustomer(String id) throws SQLException, ClassNotFoundException {
         return customerDao.search(id);
 

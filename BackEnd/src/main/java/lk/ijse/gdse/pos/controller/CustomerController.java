@@ -134,8 +134,10 @@ public class CustomerController extends HttpServlet {
         } else {
             JsonObjectBuilder objectBuilder3 = Json.createObjectBuilder();
             objectBuilder3.add("Status", false);
-            objectBuilder3.add(message, "Invalid Status !");
+            objectBuilder3.add(message, "Invalid Status!");
             resp.getWriter().println(objectBuilder3.build());
+            throw new RuntimeException ();
+
         }
 
 
