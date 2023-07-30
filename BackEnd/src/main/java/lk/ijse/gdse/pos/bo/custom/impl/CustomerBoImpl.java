@@ -8,9 +8,11 @@ import lk.ijse.gdse.pos.mapper.ObjectMapper;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class CustomerBoImpl {
     CustomerDao customerDao = new CustomerDaoImpl();
@@ -18,7 +20,7 @@ public class CustomerBoImpl {
 
 
     public boolean saveCustomer(CustomerDTO customerDTO) throws SQLException, ClassNotFoundException {
-       return customerDao.save(modelMapper.map(customerDTO, Customer.class));
+        return customerDao.save(modelMapper.map(customerDTO, Customer.class));
 
     }
 
@@ -30,7 +32,13 @@ public class CustomerBoImpl {
         return customerDao.delete(id);
 
     }
-    public List<CustomerDTO> getAllCustomer() throws SQLException, ClassNotFoundException {
-        return customerDao.getAll();
+
+     public List<CustomerDTO> getAllCustomer() throws SQLException, ClassNotFoundException {
+     /// return   customerDao.getAll();
+
+    }
+    public ResultSet searchCustomer(String id) throws SQLException, ClassNotFoundException {
+        return customerDao.search(id);
+
     }
 }

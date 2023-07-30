@@ -30,7 +30,7 @@ public class CustomerDaoImpl implements CustomerDao {
 
     public List<Customer> getAll() throws SQLException, ClassNotFoundException {
         ResultSet resultSet = SqlUtil.executeQuery("SELECT * FROM Customer");
-        ArrayList<Customer> allCustomers = new ArrayList<>();
+       List<Customer> allCustomers = new ArrayList<>();
         while (resultSet.next()) {
             allCustomers.add(new Customer(resultSet.getString(1), resultSet.getString(2), resultSet.getString(3),
                     resultSet.getString(4)));

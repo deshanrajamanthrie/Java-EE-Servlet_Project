@@ -1,9 +1,6 @@
 package lk.ijse.gdse.pos.controller;
 
-import jakarta.json.Json;
-import jakarta.json.JsonObject;
-import jakarta.json.JsonObjectBuilder;
-import jakarta.json.JsonReader;
+import jakarta.json.*;
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
 import lk.ijse.gdse.pos.bo.custom.impl.CustomerBoImpl;
@@ -21,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.*;
+import java.util.List;
 
 @WebServlet(urlPatterns = "/customer")
 public class CustomerController extends HttpServlet {
@@ -104,14 +102,43 @@ public class CustomerController extends HttpServlet {
         }
     }
 
+
+    @SneakyThrows
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
         String status = req.getParameter("status");
         if (status.equals("GET") || status.equals("SEARCH")) {
-            switch (status){
+            switch (status) {
                 case "GET":
-                    CUS
+                    List<CustomerDTO> allCustomer = customerBo.getAllCustomer();
+                    JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
+                    JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
+                    for (CustomerDTO dto : allCustomer) {     // all customer put in to the Customer DTO
+                        objectBuilder.add("id", dto.getId());       // create to the Json type
+                        objectBuilder.add("name", dto.getName());
+                        objectBuilder.add("address", dto.getAddress());
+                        objectBuilder.add("contact", dto.getContact());
+                        arrayBuilder.add(objectBuilder.build());   // Object builder (Data)====> ArrayBuilder
+                    }
+                    resp.getWriter().println(arrayBuilder.build());  //All customer data recive like as response
+                    break;
+                case "SEARCH":
+                    ResultSet resultSet = customerBo.searchCustomer(req.getParameter("id"));
+                    JsonObjectBuilder objectBuilder1 = Json.createObjectBuilder();
+                    objectBuilder1.add("id", resultSet.getString(1));
+                    objectBuilder1.add("name", resultSet.getString(2));
+                    objectBuilder1.add("address", resultSet.getString(3));
+                    objectBuilder1.add("contact", resultSet.getString(4));
+                    resp.getWriter().println(objectBuilder1.build());
             }
+        } else {
+            JsonObjectBuilder objectBuilder3 = Json.createObjectBuilder();
+            objectBuilder3.add("Status", false);
+            objectBuilder3.add(message, "Invalid Status !");
+            resp.getWriter().println(objectBuilder3.build());
         }
+
+
     }
+
 }
