@@ -120,7 +120,7 @@ public class CustomerController extends HttpServlet {
                     break;
                 case "SEARCH":
                     ResultSet resultSet = customerBo.searchCustomer(req.getParameter("id"));
-                    System.out.println(resultSet.getString(1));
+
                     JsonObjectBuilder objectBuilder1 = Json.createObjectBuilder();
                     objectBuilder1.add("id", resultSet.getString(1));
                     objectBuilder1.add("name", resultSet.getString(2));
