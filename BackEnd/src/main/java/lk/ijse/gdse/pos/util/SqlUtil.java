@@ -12,13 +12,16 @@ public class SqlUtil {
         Connection connection = DBConnection.getInstance().getConnection();
         PreparedStatement stm = connection.prepareStatement(sql);
         for (int i = 0; i < params.length; i++) {
+            System.out.println("params : "+params[i]);
             stm.setObject((i + 1), params[i]);
         }
         return stm;
     }
 
     public static ResultSet executeQuery(String sql, Object... params) throws SQLException, ClassNotFoundException {
-        return execute(sql, params).executeQuery();
+        ResultSet resultSet = execute(sql, params).executeQuery();
+        System.out.println("Rst :"+resultSet.toString());
+        return resultSet;
 
     }
 

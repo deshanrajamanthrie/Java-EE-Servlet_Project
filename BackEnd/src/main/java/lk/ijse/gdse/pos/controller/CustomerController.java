@@ -1,12 +1,8 @@
 package lk.ijse.gdse.pos.controller;
 
 import jakarta.json.*;
-import jakarta.json.bind.Jsonb;
-import jakarta.json.bind.JsonbBuilder;
 import lk.ijse.gdse.pos.bo.custom.impl.CustomerBoImpl;
-import lk.ijse.gdse.pos.db.DBConnection;
 import lk.ijse.gdse.pos.dto.CustomerDTO;
-import lk.ijse.gdse.pos.entity.Customer;
 
 import lk.ijse.gdse.pos.util.Status;
 import lombok.SneakyThrows;
@@ -124,6 +120,7 @@ public class CustomerController extends HttpServlet {
                     break;
                 case "SEARCH":
                     ResultSet resultSet = customerBo.searchCustomer(req.getParameter("id"));
+                    System.out.println(resultSet.getString(1));
                     JsonObjectBuilder objectBuilder1 = Json.createObjectBuilder();
                     objectBuilder1.add("id", resultSet.getString(1));
                     objectBuilder1.add("name", resultSet.getString(2));

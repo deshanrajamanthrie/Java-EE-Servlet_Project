@@ -1,16 +1,18 @@
 package lk.ijse.gdse.pos.bo.custom.impl;
 
+import lk.ijse.gdse.pos.bo.custom.CustomerBo;
 import lk.ijse.gdse.pos.dao.custom.CustomerDao;
 import lk.ijse.gdse.pos.dao.custom.impl.CustomerDaoImpl;
 import lk.ijse.gdse.pos.dto.CustomerDTO;
 import lk.ijse.gdse.pos.entity.Customer;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-public class CustomerBoImpl {
+public class CustomerBoImpl implements CustomerBo {
     CustomerDao customerDao = new CustomerDaoImpl();
     ModelMapper modelMapper = new ModelMapper();
 
@@ -30,12 +32,11 @@ public class CustomerBoImpl {
     }
 
     public List<CustomerDTO> getAllCustomer() throws SQLException, ClassNotFoundException {
-        /// return   customerDao.getAll();
-        return null;
+       return modelMapper.map(customerDao.getAll(),new TypeToken<List<CustomerDTO>>(){}.getType());
+
     }
 
     public ResultSet searchCustomer(String id) throws SQLException, ClassNotFoundException {
         return customerDao.search(id);
-
     }
 }

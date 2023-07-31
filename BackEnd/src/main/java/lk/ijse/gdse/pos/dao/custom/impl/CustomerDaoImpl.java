@@ -24,13 +24,18 @@ public class CustomerDaoImpl implements CustomerDao {
                 entity.getAddress(), entity.getContact(), entity.getId());
     }
 
-    public ResultSet search(String id) throws SQLException, ClassNotFoundException {
-        return SqlUtil.executeQuery("SELECT * FROM Customer WHERE CustID=?", id);
-    }
+     public ResultSet search(String id) throws SQLException, ClassNotFoundException {
+         System.out.println("Up");
+         ResultSet rst = SqlUtil.executeQuery("SELECT * FROM Customer WHERE id=?", id);
+         System.out.println(rst.getString(2));
+         System.out.println("Down");
+         return rst;
+     }
+
 
     public List<Customer> getAll() throws SQLException, ClassNotFoundException {
         ResultSet resultSet = SqlUtil.executeQuery("SELECT * FROM Customer");
-       List<Customer> allCustomers = new ArrayList<>();
+        List<Customer> allCustomers = new ArrayList<>();
         while (resultSet.next()) {
             allCustomers.add(new Customer(resultSet.getString(1), resultSet.getString(2), resultSet.getString(3),
                     resultSet.getString(4)));
