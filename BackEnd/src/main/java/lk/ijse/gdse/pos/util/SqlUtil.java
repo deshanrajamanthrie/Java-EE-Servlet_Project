@@ -19,7 +19,7 @@ public class SqlUtil {
 
     public static ResultSet executeQuery(String sql, Object... params) throws SQLException, ClassNotFoundException {
         ResultSet resultSet = execute(sql, params).executeQuery();
-        System.out.println("Rst :"+resultSet.toString());
+       // System.out.println("Rst :"+resultSet.toString());
         return resultSet;
 
     }

@@ -125,12 +125,14 @@ public class ItemController extends HttpServlet {
                     break;
                 case "SEARCH":
                     String code = req.getParameter("code");
+                    System.out.println("Code:"+code);
                     ResultSet resultSet = itemBo.searchItem(code);
+                    System.out.println("Resultset :");
                     JsonObjectBuilder objectBuilder1 = Json.createObjectBuilder();
-                    objectBuilder1.add("code",resultSet.getString(1));
-                    objectBuilder1.add("itemName",resultSet.getString(2));
-                    objectBuilder1.add("qty",resultSet.getInt(3));
-                    objectBuilder1.add("unitPrice",resultSet.getDouble(4));
+                    objectBuilder1.add("code",resultSet.getString(0));
+                    objectBuilder1.add("itemName",resultSet.getString(1));
+                    objectBuilder1.add("qty",resultSet.getInt(2));
+                    objectBuilder1.add("unitPrice",resultSet.getDouble(3));
                     resp.getWriter().println(objectBuilder1.build());
             }
         }else{
