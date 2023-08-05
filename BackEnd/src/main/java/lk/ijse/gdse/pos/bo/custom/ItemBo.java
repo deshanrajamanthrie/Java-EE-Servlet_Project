@@ -1,8 +1,7 @@
 package lk.ijse.gdse.pos.bo.custom;
 
+import lk.ijse.gdse.pos.bo.SuperBo;
 import lk.ijse.gdse.pos.dto.ItemDTO;
-import lk.ijse.gdse.pos.entity.Item;
-import org.modelmapper.TypeToken;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

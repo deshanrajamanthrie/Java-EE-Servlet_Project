@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class Item {
+public class Item implements SuperEntity{
     private String code;
     private String itemName;
     private int qty;

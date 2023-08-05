@@ -2,7 +2,7 @@ package lk.ijse.gdse.pos.dao.custom.impl;
 
 import lk.ijse.gdse.pos.dao.custom.CustomerDao;
 import lk.ijse.gdse.pos.entity.Customer;
-import lk.ijse.gdse.pos.util.SqlUtil;
+import lk.ijse.gdse.pos.bo.util.SqlUtil;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -24,13 +24,9 @@ public class CustomerDaoImpl implements CustomerDao {
                 entity.getAddress(), entity.getContact(), entity.getId());
     }
 
-     public ResultSet search(String id) throws SQLException, ClassNotFoundException {
-         System.out.println("Up");
-         ResultSet rst = SqlUtil.executeQuery("SELECT * FROM Customer WHERE id=?", id);
-         System.out.println(rst.getString(2));
-         System.out.println("Down");
-         return rst;
-     }
+    public ResultSet search(String id) throws SQLException, ClassNotFoundException {
+        return SqlUtil.executeQuery("SELECT * FROM Customer WHERE id=?", id);
+    }
 
 
     public List<Customer> getAll() throws SQLException, ClassNotFoundException {

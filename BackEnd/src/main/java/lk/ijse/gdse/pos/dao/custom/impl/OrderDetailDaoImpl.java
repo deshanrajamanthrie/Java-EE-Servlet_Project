@@ -2,7 +2,7 @@ package lk.ijse.gdse.pos.dao.custom.impl;
 
 import lk.ijse.gdse.pos.dao.custom.OrderDetailDao;
 import lk.ijse.gdse.pos.entity.OrderDetail;
-import lk.ijse.gdse.pos.util.SqlUtil;
+import lk.ijse.gdse.pos.bo.util.SqlUtil;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

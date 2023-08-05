@@ -1,9 +1,8 @@
 package lk.ijse.gdse.pos.dao.custom.impl;
 
 import lk.ijse.gdse.pos.dao.custom.ItemDao;
-import lk.ijse.gdse.pos.entity.Customer;
 import lk.ijse.gdse.pos.entity.Item;
-import lk.ijse.gdse.pos.util.SqlUtil;
+import lk.ijse.gdse.pos.bo.util.SqlUtil;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
