@@ -2,6 +2,7 @@ package lk.ijse.gdse.pos.controller;
 
 
 import jakarta.json.*;
+import lk.ijse.gdse.pos.bo.custom.impl.PurchaseOrderBOImpl;
 import lk.ijse.gdse.pos.dto.OrderDTO;
 import lk.ijse.gdse.pos.dto.OrderDetailDTO;
 
@@ -17,6 +18,7 @@ import java.util.List;
 
 @WebServlet(urlPatterns = "/orders")
 public class OrderController extends HttpServlet {
+    PurchaseOrderBOImpl purchaseOrderBO = new PurchaseOrderBOImpl();
 
 
     @Override
@@ -33,31 +35,30 @@ public class OrderController extends HttpServlet {
             JsonReader reader = Json.createReader(req.getReader());
             JsonObject jsonObject = reader.readObject();
             List<OrderDetailDTO> list = new ArrayList<>();
+            String orderId = jsonObject.getString("oId");
             OrderDTO orderDTO = new OrderDTO(
-                    jsonObject.getString("oId"),
+                    orderId,
                     jsonObject.getString("customerId"),
                     Date.valueOf(jsonObject.getString("date")
                     )
+
             );
-            JsonArray orderDetailArray = jsonObject.getJsonArray("OrderDetail");
+            System.out.println("List :"+list);
+            JsonArray orderDetailArray = jsonObject.getJsonArray("orderDetail");
             for (JsonValue jsonValue : orderDetailArray) {
                 JsonObject jsonObject1 = jsonValue.asJsonObject();
-                jsonObject1.getString("oId");
-                jsonObject1.getString("itemCode");
-                jsonObject1.getString("unitPrice");
-                jsonObject1.getString("qty");
-                jsonObject1.getString("total");
+                list.add(new OrderDetailDTO(
+                        orderId,
+                        jsonObject1.getString("itemCode"),
+                        jsonObject1.getJsonNumber("unitPrice").doubleValue(),
+                        jsonObject1.getInt("qty")
+                ));
             }
+
             orderDTO.setOrderDetailDTO(list);
 
 
-          /*  JsonArray orderDetailArray = jsonObject.getJsonArray("orderDetail");
-            for (JsonValue jsonValue : orderDetailArray) {
-                JsonObject jsonObject1 = jsonValue.asJsonObject();
-                new OrderDetailDTO();
-            }
-            orderDTO.setOrderDetailDTO(list);*/
-
+            purchaseOrderBO.saveOrder(orderDTO);
         } catch (Exception e) {
             e.printStackTrace();
         }

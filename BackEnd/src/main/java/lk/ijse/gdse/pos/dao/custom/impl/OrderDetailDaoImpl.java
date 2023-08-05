@@ -11,8 +11,8 @@ import java.util.List;
 
 public class OrderDetailDaoImpl implements OrderDetailDao {
     public boolean save(OrderDetail od) throws SQLException, ClassNotFoundException {
-        return SqlUtil.executeUpdate("INSERT INTO OrderDetail VALUES(?,?,?,?,?)",
-                od.getOId(), od.getItemCode(), od.getUnitPrice(), od.getQty(), od.getTotal());
+        return SqlUtil.executeUpdate("INSERT INTO OrderDetail VALUES(?,?,?,?)",
+                od.getOId(), od.getItemCode(), od.getUnitPrice(), od.getQty());
 
     }
 

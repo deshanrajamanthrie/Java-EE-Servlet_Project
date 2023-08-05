@@ -25,12 +25,12 @@ public class PurchaseOrderBOImpl implements PurchaseOrderBO {
 
     @Override
     public boolean saveOrder(OrderDTO orderDTO) throws SQLException {
-        Connection connection= null;
+            Connection connection= null;   //
         try {
-                connection=DBConnection.getInstance().getConnection();
+            connection=DBConnection.getInstance().getConnection();
                 connection.setAutoCommit(false);
 
-            boolean save = orderDao.save(modelMapper.map(orderDTO, Orders.class));
+            boolean save = orderDao.save(new Orders(orderDTO.getOId(),orderDTO.getCustomerId(),orderDTO.getDate()));
             if(!save){
                 connection.rollback();
                 return false;
@@ -49,8 +49,8 @@ public class PurchaseOrderBOImpl implements PurchaseOrderBO {
             e.printStackTrace();
         }finally {
             connection.setAutoCommit(true);
-
         }
         return false;
+
     }
 }
