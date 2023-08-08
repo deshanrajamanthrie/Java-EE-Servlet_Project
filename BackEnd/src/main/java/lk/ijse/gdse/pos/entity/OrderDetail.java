@@ -13,5 +13,5 @@ public class OrderDetail implements SuperEntity {
     private String itemCode;
     private double unitPrice;
     private int qty;
-    private double total;
+   // private double total;
 }

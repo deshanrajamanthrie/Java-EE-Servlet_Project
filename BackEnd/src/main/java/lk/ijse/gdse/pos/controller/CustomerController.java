@@ -1,6 +1,9 @@
 package lk.ijse.gdse.pos.controller;
 
 import jakarta.json.*;
+import lk.ijse.gdse.pos.bo.BOFactory;
+import lk.ijse.gdse.pos.bo.BOTypes;
+import lk.ijse.gdse.pos.bo.custom.CustomerBo;
 import lk.ijse.gdse.pos.bo.custom.impl.CustomerBoImpl;
 import lk.ijse.gdse.pos.dto.CustomerDTO;
 
@@ -19,7 +22,8 @@ import java.util.List;
 @WebServlet(urlPatterns = "/customer")
 public class CustomerController extends HttpServlet {
 
-    CustomerBoImpl customerBo = new CustomerBoImpl();
+
+    CustomerBo customerBo= (CustomerBo) BOFactory.getInstance().getBo(BOTypes.CUSTOMER);
     String message = "";
 
 
@@ -43,6 +47,7 @@ public class CustomerController extends HttpServlet {
     }
 
     private void saveAndUpdateCustomer(HttpServletRequest req, HttpServletResponse resp, Status status) throws IOException {
+
         JsonObjectBuilder objectBuilder = Json.createObjectBuilder(); //use for ==>we can use create object Manually
         try {
             resp.setContentType("application/json");  //check that resp type Json type or not
@@ -54,6 +59,7 @@ public class CustomerController extends HttpServlet {
                     jsonObject.getString("address"),
                     jsonObject.getString("contact")
             );
+
             switch (status) {
                 case SAVE:
                     customerBo.saveCustomer(customerDTO);

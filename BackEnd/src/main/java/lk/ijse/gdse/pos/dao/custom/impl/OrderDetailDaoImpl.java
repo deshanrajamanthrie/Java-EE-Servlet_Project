@@ -17,8 +17,8 @@ public class OrderDetailDaoImpl implements OrderDetailDao {
     }
 
     public boolean update(OrderDetail od) throws SQLException, ClassNotFoundException {
-        return SqlUtil.executeUpdate("UPDATE OrderDetail SET itemCode=?,unitPrice=?,qty=?,total=? WHERE oid=?",
-                od.getItemCode(), od.getUnitPrice(), od.getQty(), od.getTotal(), od.getOId());
+        return SqlUtil.executeUpdate("UPDATE OrderDetail SET itemCode=?,unitPrice=?,qty=? WHERE oid=?",
+                od.getItemCode(), od.getUnitPrice(), od.getQty(), od.getOId());
     }
 
     public boolean delete(String oid) throws SQLException, ClassNotFoundException {
@@ -31,7 +31,7 @@ public class OrderDetailDaoImpl implements OrderDetailDao {
         ArrayList<OrderDetail> allOD = new ArrayList<>();
         while (rst.next()) {
             allOD.add(new OrderDetail(rst.getString(1), rst.getString(2),
-                    rst.getDouble(3), rst.getInt(4), rst.getDouble(5)));
+                    rst.getDouble(3), rst.getInt(4)));
         }
         return allOD;
     }

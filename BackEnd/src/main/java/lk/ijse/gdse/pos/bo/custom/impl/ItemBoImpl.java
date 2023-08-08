@@ -3,6 +3,8 @@ package lk.ijse.gdse.pos.bo.custom.impl;
 import lk.ijse.gdse.pos.bo.custom.ItemBo;
 import lk.ijse.gdse.pos.dao.custom.ItemDao;
 import lk.ijse.gdse.pos.dao.custom.impl.ItemDaoImpl;
+import lk.ijse.gdse.pos.dao.util.DAOFactory;
+import lk.ijse.gdse.pos.dao.util.DAOTypes;
 import lk.ijse.gdse.pos.dto.CustomerDTO;
 import lk.ijse.gdse.pos.dto.ItemDTO;
 import lk.ijse.gdse.pos.entity.Item;
@@ -14,8 +16,10 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class ItemBoImpl implements ItemBo {
-    ItemDao itemDao = new ItemDaoImpl();
+
     ModelMapper modelMapper = new ModelMapper();
+    ItemDao itemDao = (ItemDao) DAOFactory.getInstance().getDAO(DAOTypes.ITEM);
+
 
     public boolean saveItem(ItemDTO itemDTO) throws SQLException, ClassNotFoundException {
         return itemDao.save(modelMapper.map(itemDTO, Item.class));

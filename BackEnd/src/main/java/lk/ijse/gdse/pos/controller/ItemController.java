@@ -1,6 +1,9 @@
 package lk.ijse.gdse.pos.controller;
 
 import jakarta.json.*;
+import lk.ijse.gdse.pos.bo.BOFactory;
+import lk.ijse.gdse.pos.bo.BOTypes;
+import lk.ijse.gdse.pos.bo.SuperBo;
 import lk.ijse.gdse.pos.bo.custom.ItemBo;
 import lk.ijse.gdse.pos.bo.custom.impl.ItemBoImpl;
 import lk.ijse.gdse.pos.dto.CustomerDTO;
@@ -21,7 +24,7 @@ import java.util.List;
 
 @WebServlet(urlPatterns = "/item")
 public class ItemController extends HttpServlet {
-    ItemBoImpl itemBo = new ItemBoImpl();
+    ItemBo itemBo = (ItemBo) BOFactory.getInstance().getBo(BOTypes.ITEM);
     String message1 = ":";
 
 
@@ -49,6 +52,7 @@ public class ItemController extends HttpServlet {
                     jsonObject.getInt("qty"),
                     jsonObject.getJsonNumber("unitPrice").doubleValue()
             );
+
             switch (status) {
                 case SAVE:
                     itemBo.saveItem(dto);
