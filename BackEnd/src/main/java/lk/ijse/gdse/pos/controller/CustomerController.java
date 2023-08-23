@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.*;
 import java.util.List;
 
@@ -23,8 +24,7 @@ import java.util.List;
 public class CustomerController extends HttpServlet {
 
 
-    CustomerBo customerBo= (CustomerBo) BOFactory.getInstance().getBo(BOTypes.CUSTOMER);
-    String message = "";
+    CustomerBo customerBo = (CustomerBo) BOFactory.getInstance().getBo(BOTypes.CUSTOMER);
 
 
     @Override
@@ -47,9 +47,8 @@ public class CustomerController extends HttpServlet {
     }
 
     private void saveAndUpdateCustomer(HttpServletRequest req, HttpServletResponse resp, Status status) throws IOException {
-
-        JsonObjectBuilder objectBuilder = Json.createObjectBuilder(); //use for ==>we can use create object Manually
         try {
+
             resp.setContentType("application/json");  //check that resp type Json type or not
             JsonReader reader = Json.createReader(req.getReader());  // read the request
             JsonObject jsonObject = reader.readObject();
@@ -59,88 +58,125 @@ public class CustomerController extends HttpServlet {
                     jsonObject.getString("address"),
                     jsonObject.getString("contact")
             );
-
+            Boolean isSaved;
+            Boolean isUpdated;
             switch (status) {
                 case SAVE:
-                    customerBo.saveCustomer(customerDTO);
+                    isSaved = customerBo.saveCustomer(customerDTO);
+                    saveCustomer(isSaved, resp);
+                    break;
                 case UPDATE:
-                    customerBo.updateCustomer(customerDTO);
+                    isUpdated = customerBo.updateCustomer(customerDTO);
+                    updateCustomer(isUpdated, resp);
             }
-            if (customerDTO != null) {
-                objectBuilder.add("status", true);
-                objectBuilder.add(message, "Successed!");
-                resp.setStatus(HttpServletResponse.SC_OK);
-            } else {
-                objectBuilder.add(message, "Invalid Input");
-                throw new RuntimeException("Invalid Input....");
-            }
+            //===========================Saved Response
         } catch (Throwable e) {
-            resp.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
-            objectBuilder.add("status", false);
-            objectBuilder.add(message, e.toString());
-            e.printStackTrace();
-        } finally {
-            resp.getWriter().println(objectBuilder.build()); //=====parse the object (mannually create)for that use getWritter
+            JsonObjectBuilder response = Json.createObjectBuilder();
+            response.add("code", 500);
+            response.add("Message", "Error");
+            response.add("Data", e.getLocalizedMessage());
+            resp.getWriter().println(response.build());
         }
+    }
+
+    private void saveCustomer(Boolean isSaved, HttpServletResponse resp) throws IOException {
+        resp.setStatus(200);
+        if (isSaved) {
+            JsonObjectBuilder response = Json.createObjectBuilder();
+            response.add("code", 200);
+            response.add("Message", "Save Done!");
+            resp.getWriter().println(response.build());
+        } else {
+            JsonObjectBuilder response = Json.createObjectBuilder();
+            response.add("code", 400);
+            response.add("Message", "Save Failed!");
+            resp.getWriter().println(response.build());
+        }
+
+    }
+
+    private void updateCustomer(Boolean isUpdated, HttpServletResponse resp) throws IOException {
+        resp.setStatus(200);
+        if (isUpdated) {
+            JsonObjectBuilder response = Json.createObjectBuilder();
+            response.add("code", 200);
+            response.add("Message", "Update Done!");
+            resp.getWriter().println(response.build());
+        } else {
+            JsonObjectBuilder response = Json.createObjectBuilder();
+            response.add("code", 400);
+            response.add("Message", "Update Failed!");
+            resp.getWriter().println(response.build());
+
+        }
+
     }
 
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
+
+        resp.setStatus(200);
         try {
             String id = req.getParameter("id");
             System.out.println("CustId:" + id);
-            if (customerBo.deleteCustomer(id)) {
-                objectBuilder.add("status", true);
-                objectBuilder.add("", "success");
+            try {
+                if (customerBo.deleteCustomer(id)) {
+                    JsonObjectBuilder response = Json.createObjectBuilder();
+                    // resp.setStatus(200);
+                    response.add("code", 200);
+                    response.add("Massage", "Delete Successed!");
+                    resp.getWriter().println(response.build());
+                } else {
+                    JsonObjectBuilder response = Json.createObjectBuilder();
+                    // resp.setStatus(200);
+                    response.add("code", 400);
+                    response.add("Massage", "Delete Failed!");
+                    resp.getWriter().println(response.build());
+                }
+            } catch (ClassNotFoundException e) {
+                JsonObjectBuilder response = Json.createObjectBuilder();
+                response.add("code", 500);
+                response.add("Message", "Error");
+                response.add("data", e.getLocalizedMessage());
+                resp.getWriter().println(response.build());
             }
-        } catch (SQLException | ClassNotFoundException e) {
-            resp.setStatus(HttpServletResponse.SC_BAD_GATEWAY);
-            objectBuilder.add("status", "false");
-            objectBuilder.add(message, e.getMessage());
-            e.printStackTrace();
-        } finally {    // all ready calls
-            resp.getWriter().println(objectBuilder.build());
+        } catch (SQLException e) {
+            JsonObjectBuilder response = Json.createObjectBuilder();
+            response.add("code", 500);
+            response.add("Message", "Error");
+            response.add("data", e.getLocalizedMessage());
+            resp.getWriter().println(response.build());
         }
     }
 
 
-    @SneakyThrows
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
-        String status = req.getParameter("status");
-        if (status.equals("GET") || status.equals("SEARCH")) {
-            switch (status) {
-                case "GET":
-                    List<CustomerDTO> allCustomer = customerBo.getAllCustomer();
-                    JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
-                    JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
-                    for (CustomerDTO dto : allCustomer) {     // all customer put in to the Customer DTO
-                        objectBuilder.add("id", dto.getId());       // create to the Json type
-                        objectBuilder.add("name", dto.getName());
-                        objectBuilder.add("address", dto.getAddress());
-                        objectBuilder.add("contact", dto.getContact());
-                        arrayBuilder.add(objectBuilder.build());   // Object builder (Data)====> ArrayBuilder
-                    }
-                    resp.getWriter().println(arrayBuilder.build());  //All customer data recive like as response
-                    break;
-                case "SEARCH":
-                    ResultSet resultSet = customerBo.searchCustomer(req.getParameter("id"));
-
-                    JsonObjectBuilder objectBuilder1 = Json.createObjectBuilder();
-                    objectBuilder1.add("id", resultSet.getString(1));
-                    objectBuilder1.add("name", resultSet.getString(2));
-                    objectBuilder1.add("address", resultSet.getString(3));
-                    objectBuilder1.add("contact", resultSet.getString(4));
-                    resp.getWriter().println(objectBuilder1.build());
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
+        JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
+        resp.setStatus(200);
+        try {
+            List<CustomerDTO> allCustomer = customerBo.getAllCustomer();
+            for (CustomerDTO dto : allCustomer) {
+                objectBuilder.add("id", dto.getId());
+                objectBuilder.add("name", dto.getName());
+                objectBuilder.add("address", dto.getAddress());
+                objectBuilder.add("contact", dto.getContact());
+                arrayBuilder.add(objectBuilder);
             }
-        } else {
-            JsonObjectBuilder objectBuilder3 = Json.createObjectBuilder();
-            objectBuilder3.add("Status", false);
-            objectBuilder3.add(message, "Invalid Status!");
-            resp.getWriter().println(objectBuilder3.build());
-            throw new RuntimeException ();
 
+            JsonObjectBuilder response = Json.createObjectBuilder();
+            response.add("code", 200);
+            response.add("Massage", "Succesed Get all!");
+            response.add("data", arrayBuilder);
+            resp.getWriter().println(response.build());
+
+        } catch (Throwable e) {
+            JsonObjectBuilder response = Json.createObjectBuilder();
+            response.add("code", 500);
+            response.add("Massage", "Error");
+            response.add("data", e.getLocalizedMessage());
+            resp.getWriter().println(response.build());
         }
 
 

@@ -52,99 +52,111 @@ public class ItemController extends HttpServlet {
                     jsonObject.getInt("qty"),
                     jsonObject.getJsonNumber("unitPrice").doubleValue()
             );
-
+            Boolean isSaved = null;
+            Boolean isUpdated = null;
             switch (status) {
                 case SAVE:
-                    itemBo.saveItem(dto);
+                    isSaved = itemBo.saveItem(dto);
+                    saveItemResponse(isSaved, resp);
+                    break;
                 case UPDATE:
-                    itemBo.updateItem(dto);
-            }
-            if (dto != null) {
-                resp.setStatus(HttpServletResponse.SC_OK);
-                objectBuilder.add("status", true);
-                objectBuilder.add(message1, "Succesed!");
-            } else {
-
-                objectBuilder.add(message1, "Invalid Input!");
-                throw new RuntimeException("Invalid Input");
+                    isUpdated = itemBo.updateItem(dto);
+                    updateItemResponse(isUpdated, resp);
+                    break;
             }
         } catch (Throwable e) {
-            resp.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
-            objectBuilder.add("status", false);
-            objectBuilder.add(message1, e.toString());
-            //   e.printStackTrace();
-        } finally {
-            resp.getWriter().println(objectBuilder.build());
+            resp.setStatus(200);
+            JsonObjectBuilder response = Json.createObjectBuilder();
+            response.add("code", 500);
+            response.add("Message", "Error");
+            response.add("data", e.getLocalizedMessage());
+            resp.getWriter().println(response.build());
+        }
+    }
+
+    private void updateItemResponse(Boolean isUpdated, HttpServletResponse resp) throws IOException {
+        resp.setStatus(200);
+        if (isUpdated) {
+            JsonObjectBuilder response = Json.createObjectBuilder();
+            response.add("code", 200);
+            response.add("Message", "Update Succesed!");
+            resp.getWriter().println(response.build());
+        } else {
+            JsonObjectBuilder response = Json.createObjectBuilder();
+            response.add("code", 400);
+            response.add("Message", "Update Failed!");
+            resp.getWriter().println(response.build());
+        }
+    }
+
+
+    private void saveItemResponse(Boolean isSaved, HttpServletResponse resp) throws IOException {
+        resp.setStatus(200);
+        if (isSaved) {
+            JsonObjectBuilder response = Json.createObjectBuilder();
+            response.add("code", 200);
+            response.add("Massage", "Save Succesed!");
+            resp.getWriter().println(response.build());
+        } else {
+            JsonObjectBuilder response = Json.createObjectBuilder();
+            response.add("code", 400);
+            response.add("Massage", "Save Failed!");
+            resp.getWriter().println(response.build());
         }
     }
 
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
         String code = req.getParameter("code");
+        resp.setStatus(200);
         try {
-            boolean isId = itemBo.deleteItem(code);
-            if (isId) {
-
-                objectBuilder.add("Status", true);
-                objectBuilder.add(message1, "Delete Success");
-                resp.setStatus(HttpServletResponse.SC_OK);
+            if (itemBo.deleteItem(code)) {
+                JsonObjectBuilder response = Json.createObjectBuilder();
+                response.add("code", 200);
+                response.add("Message", "Delete Succesed!");
+                resp.getWriter().println(response.build());
+            } else {
+                JsonObjectBuilder response = Json.createObjectBuilder();
+                response.add("code", 400);
+                response.add("Message", "Delete Failed");
+                resp.getWriter().println(response.build());
             }
         } catch (SQLException | ClassNotFoundException e) {
-            objectBuilder.add("Status", false);
-            resp.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
-            //e.printStackTrace();
-            objectBuilder.add(message1, e.getMessage());
-        } finally {
-            resp.getWriter().println(objectBuilder.build());
+            JsonObjectBuilder response = Json.createObjectBuilder();
+            response.add("code", 500);
+            response.add("Message", "Error");
+            response.add("data", e.getLocalizedMessage());
+            resp.getWriter().println(response.build());
         }
     }
 
-    @SneakyThrows
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String status = req.getParameter("status");
-        if(status .equals("GET")||status .equals("SEARCH")){
-            switch (status){
-                case "GET":
-                    List<ItemDTO> allItem = itemBo.getAllItem();
-                    //System.out.println(allItem);
-                    JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
-                    JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
-                    for (ItemDTO itemDTO: allItem) {
-                        if(itemDTO!=null) {
-                            objectBuilder.add("code", itemDTO.getCode());
-                            objectBuilder.add("itemName", itemDTO.getItemName());
-                            objectBuilder.add("qty", itemDTO.getQty());
-                            objectBuilder.add("unitPrice", itemDTO.getUnitPrice());
-                            arrayBuilder.add(objectBuilder.build());
-                        }
-                        else {
-                            objectBuilder.add(message1,"Empty Object!");
-                            objectBuilder.add("Status",false);
-                        }
-                    }
-                    resp.getWriter().println(arrayBuilder.build());
-                    resp.getWriter().println(objectBuilder.build());
-                    break;
-                case "SEARCH":
-                    String code = req.getParameter("code");
-                    System.out.println("Code:"+code);
-                    ResultSet resultSet = itemBo.searchItem(code);
-                    System.out.println("Resultset :");
-                    JsonObjectBuilder objectBuilder1 = Json.createObjectBuilder();
-                    objectBuilder1.add("code",resultSet.getString(0));
-                    objectBuilder1.add("itemName",resultSet.getString(1));
-                    objectBuilder1.add("qty",resultSet.getInt(2));
-                    objectBuilder1.add("unitPrice",resultSet.getDouble(3));
-                    resp.getWriter().println(objectBuilder1.build());
-            }
-        }else{
+        resp.setStatus(200);
+        List<ItemDTO> allItem = null;
+        try {
+            allItem = itemBo.getAllItem();
+            JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
             JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
-            objectBuilder.add("status",false);
-            objectBuilder.add(message1, "Invalid Status!");
-            resp.getWriter().println(objectBuilder.build());
+            for (ItemDTO dto : allItem) {
+                objectBuilder.add("code", dto.getCode());
+                objectBuilder.add("itemName", dto.getItemName());
+                objectBuilder.add("qty", dto.getQty());
+                objectBuilder.add("unitPrice", dto.getUnitPrice());
+                arrayBuilder.add(objectBuilder.build());
+            }
+            JsonObjectBuilder response = Json.createObjectBuilder();
+            response.add("code", 200);
+            response.add("Message", "Succesed getAll");
+            response.add("data", arrayBuilder);
+            resp.getWriter().println(response.build());
+        } catch (Throwable e) {
+            JsonObjectBuilder response = Json.createObjectBuilder();
+            response.add("code", 500);
+            response.add("Message", "Error");
+            response.add("data", e.getLocalizedMessage());
+            resp.getWriter().println(response.build());
         }
-
     }
 }

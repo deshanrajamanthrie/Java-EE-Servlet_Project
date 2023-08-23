@@ -60,35 +60,9 @@ public class PurchaseOrderBOImpl implements PurchaseOrderBO {
             connection.setAutoCommit(true);
         }
         return false;
-     /*Connection connection= null;
-        try {
-                connection=DBConnection.getInstance().getConnection();
-                connection.setAutoCommit(false);
 
-            boolean save = orderDao.save(new Orders(orderDTO.getOId(),orderDTO.getCustomerId(),orderDTO.getDate()));
-            if(!save){
-                connection.rollback();
-                return false;
-            }else{
-              List<OrderDetail> orderDetails= modelMapper.map(orderDTO.getOrderDetailDTO(), new TypeToken<List<OrderDetail>>(){}.getType());
-                for (OrderDetail o : orderDetails) {
-                    if (!orderDetailDao.save(o)) {
-                        connection.rollback();
-                        return false;
-                    }
-                }
-                connection.commit();
-                return true;
-            }
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }finally {
-            connection.setAutoCommit(true);
-        }
-        return false;*/
 
     }
-
     public List<OrderDTO> getAll() throws SQLException, ClassNotFoundException {
         return modelMapper.map(orderDao.getAll(), new TypeToken<List<OrderDTO>>() {
         }.getType());
