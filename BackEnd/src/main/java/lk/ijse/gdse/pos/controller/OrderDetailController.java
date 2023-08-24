@@ -31,7 +31,6 @@ public class OrderDetailController extends HttpServlet {
             List<OrderDetailDTO> all = orderDetailBO.getAll();
             JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
             JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
-            //    OrderDetailDTO od = new OrderDetailDTO();
             for (OrderDetailDTO dto : all) {
                 if (dto != null) {
                     objectBuilder.add("oid", dto.getItemCode());
@@ -42,7 +41,6 @@ public class OrderDetailController extends HttpServlet {
                 } else {
                     objectBuilder.add(message, "Loading Failed!");
                 }
-
             }
             resp.getWriter().println(arrayBuilder.build());
         } catch (Throwable ex) {
