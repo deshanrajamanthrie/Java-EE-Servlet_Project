@@ -68,7 +68,8 @@
             border-radius: 5px;
             font-weight: bolder;
         }
-        .customerId{
+
+        .customerId {
             font-size: 10px;
             position: relative;
             padding-top: 18px;
@@ -169,7 +170,13 @@
                             <th>Contact</th>
                         </tr>
                         </thead>
-                        <tbody class="table-group-divider bg-opacity-25 " id="customerTable">
+                        <tbody id="tbl-customer" class="table-group-divider bg-opacity-25 ">
+                       <!-- <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>-->
 
 
                         </tbody>
@@ -242,6 +249,12 @@
                         </tr>
                         </thead>
                         <tbody id="item-Table" class="table-group-divider bg-opacity-25">
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
 
 
                         </tbody>
@@ -266,23 +279,25 @@
                 <section class="col-lg-12 row h-50">
                     <aside class="row  h-100">
                         <div class="dropdown  col-2  row align-items-end mb-1 me-3">
-                            <button class="btn btn-secondary  dropdown-toggle " type="button" data-bs-toggle="dropdown" aria-expanded="false" id="btnDropDownCustomer">Customer ID</button>
+                            <button class="btn btn-secondary  dropdown-toggle " type="button" data-bs-toggle="dropdown"
+                                    aria-expanded="false" id="btnDropDownCustomer">Customer ID
+                            </button>
                             <ul class="dropdown-menu" id="dropCustomer">
-                             
+
                             </ul>
                         </div>
                         <div class="mt-1 col-2  h-100 row align-items-end me-3">
                             <label class="form-label fw-bold">Name</label>
-                            <input type="text" class="form-control "  placeholder="Name" id="orderCustomerName">
+                            <input type="text" class="form-control " placeholder="Name" id="orderCustomerName">
                         </div>
                         <div class="mt-1 col-2  h-100 row align-items-end me-3">
                             <label class="form-label fw-bold">Address</label>
-                            <input type="text" class="form-control"  placeholder="Address"
+                            <input type="text" class="form-control" placeholder="Address"
                                    id="orderCustomerAddress">
                         </div>
                         <div class="mt-1 col-2 h-100 row align-items-end">
                             <label class="form-label fw-bold">Contact</label>
-                            <input type="text" class="form-control"  placeholder="Contact No"
+                            <input type="text" class="form-control" placeholder="Contact No"
                                    id="orderCustomerContact">
                         </div>
                     </aside>
@@ -388,6 +403,7 @@
 <script src="./assets/boostrap/js/bootstrap.bundle.js"></script>
 <script src="./assets/jquery/jquery-3.6.4.min%20(1).js"></script>
 
+<script type="module" src="./db/db.js"></script>
 <script>
 
     /* var selectPage=$(".cust1,.item1",).css('color','black');*/
@@ -425,19 +441,18 @@
     });
 
 
-    /* $("#btnSaveCustomer").on('click',function () {
-         alert("Hello");
-     });*/
-
-
 </script>
-<script type="module" src="./db/db.js"></script>
 
 <script type="module" src="./controller/ItemController.js"></script>
 
 <script type="module" src="./controller/CustomerController.js"></script>
 
 <script type="module" src="./controller/OrdersController.js"></script>
+
+<script>
+
+
+</script>
 
 
 </body>

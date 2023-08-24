@@ -156,6 +156,7 @@ public class CustomerController extends HttpServlet {
         JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
         resp.setStatus(200);
         try {
+            resp.setContentType("application/json");
             List<CustomerDTO> allCustomer = customerBo.getAllCustomer();
             for (CustomerDTO dto : allCustomer) {
                 objectBuilder.add("id", dto.getId());
