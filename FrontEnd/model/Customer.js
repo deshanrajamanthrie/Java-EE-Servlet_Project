@@ -1,14 +1,14 @@
 export class Customer {
 
     constructor(id, name, address, contact) {
-        this._id = id;
-        this._name = name;
-        this._address = address;
-        this._contact = contact;
+        this.id = id;
+        this.name = name;
+        this.address = address;
+        this.contact = contact;
 
     }
 
-
+/*
     get id() {
         return this._id;
     }
@@ -39,6 +39,6 @@ export class Customer {
 
     set contact(value) {
         this._contact = value;
-    }
+    }*/
 
 }
