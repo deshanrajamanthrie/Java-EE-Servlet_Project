@@ -36,7 +36,9 @@ export class CustomerController {
                     }
                 }
             }
+
         )
+        this.loadAllCustomer();
 
     }
 
@@ -120,19 +122,21 @@ export class CustomerController {
 
     //===============================Delete Customer
     customerDelete() {
+        let id = $("#txtcustomerid").val()
+        console.log(id)
         $.ajax({
-            url: "http://localhost:8080/Mapping/customer" + $("#txtcustomerid").val(),
+            url: "http://localhost:8080/Mapping/customer?id=" + id,
             method: "DELETE",
-            success: (resp) => {
-                if (resp.code === 200) {
-                    alert(resp.message)
-                } else if (resp.code == 400) {
+            success: function (resp) {
+                console.log(resp);
+                if(resp.code===200){
+                    alert(resp.message);
+                }else if(resp.code===400){
                     alert(resp.message)
                 }else{
-                    alert(resp.message)
+                    alert(resp.code)
                 }
             }
-
         });
     }
 

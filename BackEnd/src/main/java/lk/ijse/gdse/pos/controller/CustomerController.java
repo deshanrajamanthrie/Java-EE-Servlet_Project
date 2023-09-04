@@ -116,6 +116,7 @@ public class CustomerController extends HttpServlet {
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         resp.setStatus(200);
+        resp.setContentType("application/json");
         try {
             String id = req.getParameter("id");
             System.out.println("CustId:" + id);
