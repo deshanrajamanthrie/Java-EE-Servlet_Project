@@ -73,8 +73,8 @@ public class CustomerController extends HttpServlet {
         } catch (Throwable e) {
             JsonObjectBuilder response = Json.createObjectBuilder();
             response.add("code", 500);
-            response.add("Message", "Error");
-            response.add("Data", e.getLocalizedMessage());
+            response.add("message", "Error");
+            response.add("data", e.getLocalizedMessage());
             resp.getWriter().println(response.build());
         }
     }
@@ -84,12 +84,12 @@ public class CustomerController extends HttpServlet {
         if (isSaved) {
             JsonObjectBuilder response = Json.createObjectBuilder();
             response.add("code", 200);
-            response.add("Message", "Save Done!");
+            response.add("message", "Save Done!");
             resp.getWriter().println(response.build());
         } else {
             JsonObjectBuilder response = Json.createObjectBuilder();
             response.add("code", 400);
-            response.add("Message", "Save Failed!");
+            response.add("message", "Save Failed!");
             resp.getWriter().println(response.build());
         }
 
@@ -100,12 +100,12 @@ public class CustomerController extends HttpServlet {
         if (isUpdated) {
             JsonObjectBuilder response = Json.createObjectBuilder();
             response.add("code", 200);
-            response.add("Message", "Update Done!");
+            response.add("message", "Update Done!");
             resp.getWriter().println(response.build());
         } else {
             JsonObjectBuilder response = Json.createObjectBuilder();
             response.add("code", 400);
-            response.add("Message", "Update Failed!");
+            response.add("message", "Update Failed!");
             resp.getWriter().println(response.build());
 
         }
@@ -124,26 +124,26 @@ public class CustomerController extends HttpServlet {
                     JsonObjectBuilder response = Json.createObjectBuilder();
                     // resp.setStatus(200);
                     response.add("code", 200);
-                    response.add("Massage", "Delete Successed!");
+                    response.add("message", "Delete Successed!");
                     resp.getWriter().println(response.build());
                 } else {
                     JsonObjectBuilder response = Json.createObjectBuilder();
                     // resp.setStatus(200);
                     response.add("code", 400);
-                    response.add("Massage", "Delete Failed!");
+                    response.add("message", "Delete Failed!");
                     resp.getWriter().println(response.build());
                 }
             } catch (ClassNotFoundException e) {
                 JsonObjectBuilder response = Json.createObjectBuilder();
                 response.add("code", 500);
-                response.add("Message", "Error");
+                response.add("message", "Error");
                 response.add("data", e.getLocalizedMessage());
                 resp.getWriter().println(response.build());
             }
         } catch (SQLException e) {
             JsonObjectBuilder response = Json.createObjectBuilder();
             response.add("code", 500);
-            response.add("Message", "Error");
+            response.add("message", "Error");
             response.add("data", e.getLocalizedMessage());
             resp.getWriter().println(response.build());
         }
@@ -165,7 +165,6 @@ public class CustomerController extends HttpServlet {
                 objectBuilder.add("contact", dto.getContact());
                 arrayBuilder.add(objectBuilder);
             }
-
             JsonObjectBuilder response = Json.createObjectBuilder();
             response.add("code", 200);
             response.add("Massage", "Succesed Get all!");

@@ -27,7 +27,6 @@ public class ItemController extends HttpServlet {
     ItemBo itemBo = (ItemBo) BOFactory.getInstance().getBo(BOTypes.ITEM);
     String message1 = ":";
 
-
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         saveAndUpdateItem(req, resp, Status.SAVE);

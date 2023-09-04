@@ -16,7 +16,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.List;
 
 @WebServlet(urlPatterns = "/orderDetail")
@@ -27,7 +26,6 @@ public class OrderDetailController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
-
             List<OrderDetailDTO> all = orderDetailBO.getAll();
             JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
             JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
