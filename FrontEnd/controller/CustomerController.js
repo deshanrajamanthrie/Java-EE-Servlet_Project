@@ -40,24 +40,21 @@ export class CustomerController {
                 }
             )
             this.clearTextFields();
-        }else{
-           alert("Invalid Input please Check Your input data!");
+        } else {
+            alert("Invalid Input please Check Your input data!");
         }
         this.loadAllCustomer();
 
     }
 
 
-
-
     //======================================Get All Customer
     loadAllCustomer() {
-
         $.ajax({
             url: "http://localhost:8080/Mapping/customer",
             method: "GET",
             success: function (resp) {
-            //    $("#tbl-customer").empty();
+                //    $("#tbl-customer").empty();
                 $("#tbl-customer").empty();
                 for (const customer of resp.data) {
 
@@ -115,6 +112,7 @@ export class CustomerController {
             $.ajax({
                     url: "http://localhost:8080/Mapping/customer",
                     method: "PUT",
+                    contentType: "application/json",
                     data: JSON.stringify(customer),// String Data Convert to Json Type
                     success: function (resp) {
                         if (resp.code === 200) {
@@ -127,9 +125,11 @@ export class CustomerController {
                     }
                 }
             )
-            this.loadAllCustomer();
-
+            this.clearTextFields();
+        } else {
+            alert("Invalid Input please Check Your input data!");
         }
+        this.loadAllCustomer();
     }
 
     //===============================Delete Customer
@@ -151,6 +151,8 @@ export class CustomerController {
                 }
             }
         });
+        this.loadAllCustomer();
+        this.clearTextFields();
 
     }
 
