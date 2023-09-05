@@ -1,56 +1,66 @@
 import {Customer} from "../model/Customer.js";
 import {customerArray} from "../db/db.js";
 
+
 export class CustomerController {
     constructor() {
         $("#btnSaveCustomer").click(this.customerSave.bind(this));
         $("#btnUpdatesCustomer").click(this.customerUpdate.bind(this));
-        this.loadAllCustomer();
+        //  this.loadAllCustomer();
         $("#btnDeleteCustomer").click(this.customerDelete.bind(this))
         this.txtFieldKeyOnAction();
+        this.loadAllCustomer();
 
     }
 
 
     //===================================Save Customer
     customerSave() {
+        if (this.IsValid()) {
+            let cId = $("#txtcustomerid").val();
+            let cName = $("#txtcustomerName").val()
+            let cAddress = $("#txtcustomerAddres").val();
+            let cContact = $("#txtcustomerContact").val();
+            let customer = new Customer(cId, cName, cAddress, cContact);
 
-        let cId = $("#txtcustomerid").val();
-        let cName = $("#txtcustomerName").val()
-        let cAddress = $("#txtcustomerAddres").val();
-        let cContact = $("#txtcustomerContact").val();
-        let customer = new Customer(cId, cName, cAddress, cContact);
-
-        $.ajax({
-                url: "http://localhost:8080/Mapping/customer",
-                method: "POST",
-                contentType: "application/json",  //Request Type
-                data: JSON.stringify(customer), //Java Script Object convert to the Jason Object1
-                success: function (resp) {
-                    if (resp.code === 200) {
-                        alert(resp.message);
-                    } else if (resp.code === 400) {
-                        alert(resp.message);
-                    } else {
-                        alert(resp.data)
+            $.ajax({
+                    url: "http://localhost:8080/Mapping/customer",
+                    method: "POST",
+                    contentType: "application/json",  //Request Type
+                    data: JSON.stringify(customer), //Java Script Object convert to the Jason Object1
+                    success: function (resp) {
+                        if (resp.code === 200) {
+                            alert(resp.message);
+                        } else if (resp.code === 400) {
+                            alert(resp.message);
+                        } else {
+                            alert(resp.data)
+                        }
                     }
                 }
-            }
-
-        )
+            )
+            this.clearTextFields();
+        }else{
+           alert("Invalid Input please Check Your input data!");
+        }
         this.loadAllCustomer();
 
     }
 
+
+
+
     //======================================Get All Customer
     loadAllCustomer() {
+
         $.ajax({
             url: "http://localhost:8080/Mapping/customer",
             method: "GET",
             success: function (resp) {
-                $("#customerTable").empty();
-                console.log(typeof resp);
+            //    $("#tbl-customer").empty();
+                $("#tbl-customer").empty();
                 for (const customer of resp.data) {
+
                     let row = `<tr><td>${customer.id}</td><td>${customer.name}</td><td>${customer.address}</td><td>${customer.contact}</td></tr>`;
                     $("#tbl-customer").append(row);
 
@@ -61,7 +71,7 @@ export class CustomerController {
                         let contact = $(this).children().eq(3).text();
 
 
-                        console.log(id + "" + name + "" + address + "" + contact);
+                        console.log(id + " " + name + " " + address + " " + contact);
                         $("#txtcustomerid").val(id);
                         $("#txtcustomerName").val(name);
                         $("#txtcustomerAddres").val(address);
@@ -71,10 +81,9 @@ export class CustomerController {
                 }
             }
         });
-
+        //this.clearTextFields();
     }
 
-    // ===========================Bind Customer in to the text Fields
 
     /*  allBindCustomer(row) {
          $(row).click(function () {
@@ -96,28 +105,31 @@ export class CustomerController {
 
     //=============================Update Customer
     customerUpdate() {
-        let cId = $("#txtcustomerid").val();
-        let cName = $("#txtcustomerName").val()
-        let cAddress = $("#txtcustomerAddres").val();
-        let cContact = $("#txtcustomerContact").val();
-        let customer = new Customer(cId, cName, cAddress, cContact);
+        if (this.IsValid()) {
+            let cId = $("#txtcustomerid").val();
+            let cName = $("#txtcustomerName").val()
+            let cAddress = $("#txtcustomerAddres").val();
+            let cContact = $("#txtcustomerContact").val();
+            let customer = new Customer(cId, cName, cAddress, cContact);
 
-
-        $.ajax({
-            url: "http://localhost:8080/Mapping/customer",
-            method: "PUT",
-            data: JSON.stringify(customer),// String Data Convert to Json Type
-            success: function (resp) {
-                if (resp.code === 200) {
-                    alert(resp.message);
-                } else if (resp.code === 400) {
-                    alert(resp.message);
-                } else {
-                    alert(resp.data);
+            $.ajax({
+                    url: "http://localhost:8080/Mapping/customer",
+                    method: "PUT",
+                    data: JSON.stringify(customer),// String Data Convert to Json Type
+                    success: function (resp) {
+                        if (resp.code === 200) {
+                            alert(resp.message);
+                        } else if (resp.code === 400) {
+                            alert(resp.message);
+                        } else {
+                            alert(resp.data);
+                        }
+                    }
                 }
+            )
+            this.loadAllCustomer();
 
-            }
-        });
+        }
     }
 
     //===============================Delete Customer
@@ -129,15 +141,17 @@ export class CustomerController {
             method: "DELETE",
             success: function (resp) {
                 console.log(resp);
-                if(resp.code===200){
+                if (resp.code === 200) {
                     alert(resp.message);
-                }else if(resp.code===400){
+                    this.loadAllCustomer();
+                } else if (resp.code === 400) {
                     alert(resp.message)
-                }else{
+                } else {
                     alert(resp.code)
                 }
             }
         });
+
     }
 
     //=======================Mouse key On Action
@@ -209,6 +223,12 @@ export class CustomerController {
         return true;
     }
 
+    clearTextFields() {
+        $("#txtcustomerid").val("");
+        $("#txtcustomerName").val("");
+        $("#txtcustomerAddres").val("");
+        $("#txtcustomerContact").val("");
+    }
 
 }
 
