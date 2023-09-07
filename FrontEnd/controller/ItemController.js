@@ -3,112 +3,90 @@ import {itemsArray} from "../db/db.js";
 
 export class ItemController {
     constructor() {
-        $("#btnItemSave").click(this.itemHandle.bind(this));
-        $("#btnItemSearch").click(this.itemSearch.bind(this));
-        $("#btnItemUpdate").click(this.itemUpdateHandle.bind(this));
-        /* this.isValid();*/
+        $("#btnItemSave").click(this.itemSave.bind(this));
         this.textFieldOnAction();
-
-        this.itemsarray2 = itemsArray;
         this.loadAllItem();
+    }
+
+
+    itemSave() {
+        let code = $("#txtItemid").val();
+        let itemName = $("#txtItemName").val();
+        let itemQty = $("#txtItemqty").val()
+        let itemUnitPrice = $("#txtItemUnitPrize").val();
+        let items = new Item(code, itemName, itemQty, itemUnitPrice);
+
+        $.ajax({
+            url: "http://localhost:8080/Mapping/item",
+            method: "POST",
+            contentType: "application/json",
+            data: JSON.stringify(items),
+            success: function (resp) {
+                if (resp.code === 200) {
+                    alert(resp.message);
+                }
+                if (resp.code === 400) {
+                    alert(resp.message);
+                } else {
+                    alert(resp.data);
+                }
+
+            }
+        });
 
     }
 
+    //=================================================Item GetAll
+    loadAllItem() {
+        $.ajax({
+            url: "http://localhost:8080/Mapping/item",
+            method: "GET",
+            success: function (resp) {
+                $("#item-Table").empty();
+                for (const item of resp.data) {
+                    let row = `<tr><td>${item.code}</td><td>${item.itemName}</td><td>${item.qty}</td><td>${item.unitPrice}</td></tr>`;
+                    $("#item-Table").append(row);
+
+                    $("#item-Table>:last-child").click(function () {
+                        let code = $(this).children().eq(0).text();
+                        let itemName = $(this).children().eq(1).text();
+                        let qty = $(this).children().eq(2).text();
+                        let unitPrice = $(this).children().eq(3).text();
+
+                        $("#txtItemid").val(code);
+                        $("#txtItemName").val(itemName);
+                        $("#txtItemqty").val(qty);
+                        $("#txtItemUnitPrize").val(unitPrice);
+
+                    });
+                }
+
+            }
+
+
+        });
+    }
+
     textFieldOnAction() {
-        $("#txtItemid").keydown(function (event) {
+        $("#txtItemid").on('keydown', function (event) {
             if (event.key === 'Enter') {
                 $("#txtItemName").focus();
             }
         });
-        $("#txtItemName").keydown(function (event) {
+        $("#txtItemName").on('keydown', function (event) {
             if (event.key === 'Enter') {
                 $("#txtItemqty").focus();
             }
         });
-        $("#txtItemqty").keydown(function (event) {
+        $("#txtItemqty").on('keydown', function (event) {
             if (event.key === 'Enter') {
                 $("#txtItemUnitPrize").focus();
             }
         });
-        $("#txtItemUnitPrize").keydown(function (event) {
-            if (event.key === 'Enter') {
-                $("#btnItemSave").focus();
-            }
-        });
     }
 
-    itemHandle() {
-        for (let i in this.itemsarray2) {
-            if (this.itemsarray2[i].code === $("#txtItemid").val()) {
-                alert("Already Exists!")
-                return;
-            }
-        }
-        if (this.isValid()) {
-            let code = $("#txtItemid").val();
-            let name = $("#txtItemName").val();
-            let qty = $("#txtItemqty").val();
-            let unitPrize = $("#txtItemUnitPrize").val();
-            let itemobj = new Item(code, name, qty, unitPrize);
-            if ((itemobj.code && itemobj.name && itemobj.qty && itemobj.unitPrize) === "") {
-                alert("Submit Failed! Please Input Your Detail");
-            } else {
-                this.saveItem(itemobj);
-            }
-        }
-    }
 
-    saveItem(itemobj) {
-        let itemAdd = this.itemsarray2.push(itemobj);
-        console.log(itemAdd);
-        this.loadAllItem();
-    }
-
-    loadAllItem() {
-        $("#item-Table").empty();
-        for (let i in this.itemsarray2) {
-            let printRow = `<tr><th>${this.itemsarray2[i].code}</th><th>${this.itemsarray2[i].name}</th><th>${this.itemsarray2[i].qty}</th><th>${this.itemsarray2[i].unitPriceitem}</th></tr>`;
-            $("#item-Table").append(printRow);
-        }
-        this.clearTextField();
-    }
-
-    itemSearch() {
-        this.itemsarray2.filter(function (e) {
-            if (e._code === $("#searchItem").val()) {
-                $("#txtItemid").val(e._code);
-                $("#txtItemName").val(e._name);
-                $("#txtItemqty").val(e._qty);
-                $("#txtItemUnitPrize").val(e._unitPriceitem);
-            }/*{
-                if (e._code !== $("#searchItem").val()) {
-                    $("#searchItem").css('border', '2px solid #d63031');
-                    $("#not-Define-item").text("Have Not Define an Item").css('color', 'red');
-                }
-            }*/
-        });
-
-
-    }
-
-    //================================================Update items
-    itemUpdateHandle() {
-
-        let upName = $("#txtItemName").val();
-        let upqty = $("#txtItemqty").val();
-        let upUnit = $("#txtItemUnitPrize").val();
-
-        this.itemsarray2.forEach((e) => {           //get all items array's data after check item id and input id
-            if (e._code === $("#txtItemid").val()) {
-                e._name = upName;
-                e._qty = upqty;
-                e._unitPriceitem = upUnit;
-            }
-        });
-        this.loadAllItem();
-    }
-
-    //===============clear the text Field
+    //============================clear the text Field
     clearTextField() {
         $("#txtItemid").val("");
         $("#txtItemName").val("");
@@ -116,7 +94,7 @@ export class ItemController {
         $("#txtItemUnitPrize").val("")
     }
 
-    //=======================Regex settle
+    //===========================Regex settle
     isValid() {
         let iscode = /^M([0-9]){3,3}$/;
         let isType = /^[A-Za-z]+-[0-9]{4}$|^[A-Za-z\s]+$/;

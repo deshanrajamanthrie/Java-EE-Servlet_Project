@@ -6,7 +6,6 @@ export class CustomerController {
     constructor() {
         $("#btnSaveCustomer").click(this.customerSave.bind(this));
         $("#btnUpdatesCustomer").click(this.customerUpdate.bind(this));
-        //  this.loadAllCustomer();
         $("#btnDeleteCustomer").click(this.customerDelete.bind(this))
         this.txtFieldKeyOnAction();
         this.loadAllCustomer();
@@ -44,6 +43,7 @@ export class CustomerController {
             alert("Invalid Input please Check Your input data!");
         }
         this.loadAllCustomer();
+
 
     }
 

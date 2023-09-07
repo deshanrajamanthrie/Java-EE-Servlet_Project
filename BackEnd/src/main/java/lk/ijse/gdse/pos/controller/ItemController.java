@@ -39,20 +39,22 @@ public class ItemController extends HttpServlet {
     }
 
     private void saveAndUpdateItem(HttpServletRequest req, HttpServletResponse resp, Status status) throws IOException {
-        JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
+        //JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
 
         try {
             resp.setContentType("application/json");
             JsonReader reader = Json.createReader(req.getReader());
             JsonObject jsonObject = reader.readObject();
+            JsonNumber jsonNumber;
             ItemDTO dto = new ItemDTO(
                     jsonObject.getString("code"),
                     jsonObject.getString("itemName"),
                     jsonObject.getInt("qty"),
                     jsonObject.getJsonNumber("unitPrice").doubleValue()
             );
-            Boolean isSaved = null;
-            Boolean isUpdated = null;
+            System.out.println( dto.getQty()+"  "+dto.getUnitPrice());
+            Boolean isSaved;
+            Boolean isUpdated;
             switch (status) {
                 case SAVE:
                     isSaved = itemBo.saveItem(dto);
@@ -67,7 +69,7 @@ public class ItemController extends HttpServlet {
             resp.setStatus(200);
             JsonObjectBuilder response = Json.createObjectBuilder();
             response.add("code", 500);
-            response.add("Message", "Error");
+            response.add("message", "Error");
             response.add("data", e.getLocalizedMessage());
             resp.getWriter().println(response.build());
         }
@@ -78,12 +80,12 @@ public class ItemController extends HttpServlet {
         if (isUpdated) {
             JsonObjectBuilder response = Json.createObjectBuilder();
             response.add("code", 200);
-            response.add("Message", "Update Succesed!");
+            response.add("message", "Update Succesed!");
             resp.getWriter().println(response.build());
         } else {
             JsonObjectBuilder response = Json.createObjectBuilder();
             response.add("code", 400);
-            response.add("Message", "Update Failed!");
+            response.add("message", "Update Failed!");
             resp.getWriter().println(response.build());
         }
     }
@@ -94,12 +96,12 @@ public class ItemController extends HttpServlet {
         if (isSaved) {
             JsonObjectBuilder response = Json.createObjectBuilder();
             response.add("code", 200);
-            response.add("Massage", "Save Succesed!");
+            response.add("message", "Save Succesed!");
             resp.getWriter().println(response.build());
         } else {
             JsonObjectBuilder response = Json.createObjectBuilder();
             response.add("code", 400);
-            response.add("Massage", "Save Failed!");
+            response.add("message", "Save Failed!");
             resp.getWriter().println(response.build());
         }
     }
@@ -134,6 +136,7 @@ public class ItemController extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setStatus(200);
         List<ItemDTO> allItem = null;
+        resp.setContentType("application/json");
         try {
             allItem = itemBo.getAllItem();
             JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
