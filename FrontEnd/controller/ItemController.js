@@ -44,7 +44,30 @@ export class ItemController {
     }
 
     itemUpdate() {
+        let code = $("#txtItemid").val();
+        let itemName = $("#txtItemName").val();
+        let qty = $("#txtItemqty").val();
+        let unitPrice = $("#txtItemUnitPrize").val();
 
+        let item = new Item(code, itemName, Number.parseInt(qty), Number.parseInt(unitPrice));
+        $.ajax({
+            url: "http://localhost:8080/Mapping/item",
+            method: "PUT",
+            data: JSON.stringify(item),
+            success:function (resp) {
+                if(resp.code===200){
+                    alert(resp.message);
+                }else if(resp.code===400){
+                    alert(resp.message);
+                }else{
+                    alert(resp.data);
+                }
+
+            }
+
+
+        });
+        this.loadAllItem();
 
     }
 
