@@ -45,7 +45,7 @@ public class ItemController extends HttpServlet {
             resp.setContentType("application/json");
             JsonReader reader = Json.createReader(req.getReader());
             JsonObject jsonObject = reader.readObject();
-            JsonNumber jsonNumber;
+
             ItemDTO dto = new ItemDTO(
                     jsonObject.getString("code"),
                     jsonObject.getString("itemName"),
@@ -109,23 +109,25 @@ public class ItemController extends HttpServlet {
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String code = req.getParameter("code");
+        System.out.println("Code :"+code);
         resp.setStatus(200);
+        resp.setContentType("application/json");
         try {
             if (itemBo.deleteItem(code)) {
                 JsonObjectBuilder response = Json.createObjectBuilder();
                 response.add("code", 200);
-                response.add("Message", "Delete Succesed!");
+                response.add("message", "Delete Succesed!");
                 resp.getWriter().println(response.build());
             } else {
                 JsonObjectBuilder response = Json.createObjectBuilder();
                 response.add("code", 400);
-                response.add("Message", "Delete Failed");
+                response.add("message", "Delete Failed");
                 resp.getWriter().println(response.build());
             }
         } catch (SQLException | ClassNotFoundException e) {
             JsonObjectBuilder response = Json.createObjectBuilder();
             response.add("code", 500);
-            response.add("Message", "Error");
+            response.add("message", "Error");
             response.add("data", e.getLocalizedMessage());
             resp.getWriter().println(response.build());
         }

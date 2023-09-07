@@ -4,37 +4,50 @@ import {itemsArray} from "../db/db.js";
 export class ItemController {
     constructor() {
         $("#btnItemSave").click(this.itemSave.bind(this));
+        $("#btnItemDelete").click(this.itemDelete.bind(this));
+        $("#btnItemUpdate").click(this.itemUpdate.bind(this));
         this.textFieldOnAction();
         this.loadAllItem();
     }
 
 
     itemSave() {
-        let code = $("#txtItemid").val();
-        let itemName = $("#txtItemName").val();
-        let itemQty = $("#txtItemqty").val()
-        let itemUnitPrice = $("#txtItemUnitPrize").val();
-        let items = new Item(code, itemName, itemQty, itemUnitPrice);
+        if (this.isValid()) {
+            let code = $("#txtItemid").val();
+            let itemName = $("#txtItemName").val();
+            let itemQty = $("#txtItemqty").val()
+            let itemUnitPrice = $("#txtItemUnitPrize").val();
+            let items = new Item(code, itemName, Number.parseInt(itemQty), Number.parseInt(itemUnitPrice));
 
-        $.ajax({
-            url: "http://localhost:8080/Mapping/item",
-            method: "POST",
-            contentType: "application/json",
-            data: JSON.stringify(items),
-            success: function (resp) {
-                if (resp.code === 200) {
-                    alert(resp.message);
-                }
-                if (resp.code === 400) {
-                    alert(resp.message);
-                } else {
-                    alert(resp.data);
-                }
+            $.ajax({
+                url: "http://localhost:8080/Mapping/item",
+                method: "POST",
+                contentType: "application/json",
+                data: JSON.stringify(items),
+                success: function (resp) {
+                    if (resp.code === 200) {
+                        alert(resp.message);
+                    }
+                    if (resp.code === 400) {
+                        alert(resp.message);
+                    } else {
+                        alert(resp.data);
+                    }
 
-            }
-        });
+                }
+            });
+            this.clearTextField();
+        } else {
+
+        }
+        this.loadAllItem();
+    }
+
+    itemUpdate() {
+
 
     }
+
 
     //=================================================Item GetAll
     loadAllItem() {
@@ -62,10 +75,9 @@ export class ItemController {
                 }
 
             }
-
-
         });
     }
+
 
     textFieldOnAction() {
         $("#txtItemid").on('keydown', function (event) {
@@ -83,6 +95,26 @@ export class ItemController {
                 $("#txtItemUnitPrize").focus();
             }
         });
+    }
+
+    itemDelete() {
+        let code = $("#txtItemid").val();
+        $.ajax({
+            url: "http://localhost:8080/Mapping/item?code=" + code,
+            method: "DELETE",
+            success: function (resp) {
+                if (resp.code === 200) {
+                    alert(resp.message);
+                } else if (resp.code === 400) {
+                    alert(resp.message);
+                } else {
+                    alert(resp.data);
+                }
+            }
+
+        });
+        this.loadAllItem();
+        this.clearTextField();
     }
 
 
